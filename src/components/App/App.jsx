@@ -9,15 +9,10 @@ import './App.css';
 export default class App extends Component {
   state = {
     todoData: [
-      { status: null, description: 'Editing task', crDate: new Date(1616434004397), id: 2 },
-      { status: null, description: 'Completed task', crDate: new Date(1616434004397), id: 11 },
-      { status: 'completed', description: 'Active task', crDate: new Date(1616434004397), id: 3 },
-      {
-        status: null,
-        description: 'Completed task',
-        crDate: new Date(1616431004000),
-        id: 16,
-      },
+      { status: null, description: 'Active task', crDate: new Date(1616434004397), id: 2 },
+      { status: null, description: 'Active task', crDate: new Date(1616933004397), id: 11 },
+      { status: 'completed', description: 'Completed task', crDate: new Date(new Date() - 94397), id: 3 },
+      { status: 'completed', description: 'Completed task', crDate: new Date(), id: 16 },
       { status: null, description: 'Active task', crDate: new Date(), id: 30 },
     ],
 

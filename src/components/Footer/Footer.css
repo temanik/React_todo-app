@@ -68,6 +68,7 @@
 
 .clear-completed,
 html .clear-completed:active {
+  min-width: 110px;
   position: relative;
   line-height: 20px;
   text-decoration: none;
