@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import { STATUS_ALL, STATUS_ACTIVE, STATUS_COMPLETED } from '../../constants';
+
 import './Footer.css';
 
 export default class Footer extends Component {
   static defaultProps = {
-    filter: null,
+    filter: STATUS_ALL,
   };
 
   static propTypes = {
@@ -18,50 +20,51 @@ export default class Footer extends Component {
 
   filterSelected = (filterBtn, filter) => (filter === filterBtn ? 'selected' : null);
 
+  getFilterButtonElement = (status, label) => {
+    const { onSort, filter } = this.props;
+
+    return (
+      <li>
+        <button
+          type="button"
+          className={this.filterSelected(status, filter)}
+          onClick={() => {
+            onSort(status);
+          }}
+        >
+          {label}
+        </button>
+      </li>
+    );
+  };
+
+  getClearBtn = (clearBtn) => {
+    const { onClearCompleted } = this.props;
+
+    if (clearBtn)
+      return (
+        <button type="button" className="clear-completed" onClick={onClearCompleted}>
+          Clear completed
+        </button>
+      );
+
+    return false;
+  };
+
   render() {
-    const { leftTaskCount, onClearCompleted, onSort, filter, clearBtn } = this.props;
+    const { leftTaskCount, clearBtn } = this.props;
 
     return (
       <footer className="footer">
         <span className="todo-count">{leftTaskCount} items left</span>
+
         <ul className="filters">
-          <li>
-            <button
-              type="button"
-              className={this.filterSelected('all', filter)}
-              onClick={() => {
-                onSort('all');
-              }}
-            >
-              All
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              className={this.filterSelected(null, filter)}
-              onClick={() => {
-                onSort(null);
-              }}
-            >
-              Active
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              className={this.filterSelected('completed', filter)}
-              onClick={() => {
-                onSort('completed');
-              }}
-            >
-              Completed
-            </button>
-          </li>
+          {this.getFilterButtonElement(STATUS_ALL, 'All')}
+          {this.getFilterButtonElement(STATUS_ACTIVE, 'Active')}
+          {this.getFilterButtonElement(STATUS_COMPLETED, 'Completed')}
         </ul>
-        <button type="button" className="clear-completed" onClick={onClearCompleted}>
-          {clearBtn ? 'Clear completed' : ''}
-        </button>
+
+        {this.getClearBtn(clearBtn)}
       </footer>
     );
   }

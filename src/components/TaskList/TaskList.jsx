@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import { STATUS_ACTIVE, STATUS_COMPLETED, STATUS_EDITING } from '../../constants';
+
 import './TaskList.css';
 
 import Task from '../Task';
@@ -17,14 +19,16 @@ export default class TaskList extends Component {
 
   statusToggle = (oldStatus, newStatus) => {
     switch (true) {
-      case newStatus === 'editing':
-        return oldStatus === 'completed' ? 'completed editing' : 'editing';
+      case newStatus === STATUS_EDITING:
+        return oldStatus === STATUS_COMPLETED
+          ? `${STATUS_COMPLETED} ${STATUS_EDITING}`
+          : `${STATUS_ACTIVE} ${STATUS_EDITING}`;
 
-      case oldStatus === null:
-        return 'completed';
+      case oldStatus === STATUS_ACTIVE:
+        return STATUS_COMPLETED;
 
-      case oldStatus === 'completed':
-        return null;
+      case oldStatus === STATUS_COMPLETED:
+        return STATUS_ACTIVE;
 
       default:
         return newStatus || oldStatus;

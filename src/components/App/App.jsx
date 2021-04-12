@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import { STATUS_ALL, STATUS_ACTIVE, STATUS_COMPLETED, STATUS_EDITING } from '../../constants';
+
 import Header from '../Header';
 import TaskList from '../TaskList';
 import Footer from '../Footer';
@@ -9,17 +11,17 @@ import './App.css';
 export default class App extends Component {
   state = {
     todoData: [
-      { status: null, description: 'Active task', crDate: new Date(1616434004397), id: 2 },
-      { status: null, description: 'Active task', crDate: new Date(1616933004397), id: 11 },
-      { status: 'completed', description: 'Completed task', crDate: new Date(new Date() - 94397), id: 3 },
-      { status: 'completed', description: 'Completed task', crDate: new Date(), id: 16 },
-      { status: null, description: 'Active task', crDate: new Date(), id: 30 },
+      this.createNewTask('Active task', STATUS_ACTIVE, 1618993504397, 1),
+      this.createNewTask('Active task', STATUS_ACTIVE, 1616933004397, 10),
+      this.createNewTask('Completed task', STATUS_COMPLETED, new Date(new Date() - 94397), 13),
+      this.createNewTask('Completed task', STATUS_COMPLETED, null, 11),
+      this.createNewTask('Active task', STATUS_ACTIVE, null, 18),
     ],
 
-    filter: 'all',
+    filter: STATUS_ALL,
   };
 
-  isStatusCompleted = (status) => !!(status !== null && status.includes('completed'));
+  isStatusCompleted = (status) => status === STATUS_COMPLETED;
 
   getTaskIndex = (arr, id) => arr.findIndex((item) => item.id === id);
 
@@ -30,32 +32,10 @@ export default class App extends Component {
     return data.length - leftTask.length;
   };
 
-  onClearCompleted = (data) => {
-    data.forEach((item) => {
-      if (this.isStatusCompleted(item.status)) this.onDeletedTask(item.id);
-    });
-  };
-
-  createNewTaskId = (data) => {
-    if (Object.keys(data).length !== 0) {
-      const maxDataId = data.map((item) => item.id);
-      return Math.max(...maxDataId) + 1;
-    }
-
-    return 1;
-  };
-
-  createNewTask = (text) => {
+  onClearCompleted = () => {
     this.setState(({ todoData }) => {
-      const newData = [...todoData];
-      newData.unshift({
-        status: null,
-        description: text,
-        crDate: new Date(),
-        id: this.createNewTaskId(newData),
-      });
-
-      return { todoData: newData };
+      const filteredNewData = todoData.filter((task) => task.status !== STATUS_COMPLETED);
+      return { todoData: filteredNewData };
     });
   };
 
@@ -68,7 +48,7 @@ export default class App extends Component {
       const idx = this.getTaskIndex(todoData, id);
       const newTask = { ...todoData[idx] };
       newTask.description = newLabel;
-      newTask.status = newTask.status === 'editing' ? null : 'completed';
+      newTask.status = newTask.status === `${STATUS_ACTIVE} ${STATUS_EDITING}` ? STATUS_ACTIVE : STATUS_COMPLETED;
       const newData = [...todoData.slice(0, idx), newTask, ...todoData.slice(idx + 1)];
 
       return { todoData: newData };
@@ -81,6 +61,16 @@ export default class App extends Component {
       const newTask = { ...todoData[idx] };
       newTask.status = status;
       const newData = [...todoData.slice(0, idx), newTask, ...todoData.slice(idx + 1)];
+
+      return { todoData: newData };
+    });
+  };
+
+  onAddTask = (label) => {
+    const task = this.createNewTask(label);
+
+    this.setState(({ todoData }) => {
+      const newData = [task, ...todoData];
 
       return { todoData: newData };
     });
@@ -100,19 +90,42 @@ export default class App extends Component {
       const { status } = task;
 
       switch (true) {
-        case filter === 'all':
+        case filter === STATUS_ALL:
           return true;
 
-        case filter === null && (status === null || status === 'editing'):
+        case filter === STATUS_ACTIVE && (status === STATUS_ACTIVE || status === `${STATUS_ACTIVE} ${STATUS_EDITING}`):
           return true;
 
-        case filter === 'completed' && status !== null && status.includes('completed'):
+        case filter === STATUS_COMPLETED &&
+          (status === STATUS_COMPLETED || status === `${STATUS_COMPLETED} ${STATUS_EDITING}`):
           return true;
 
         default:
           return false;
       }
     });
+
+  createNewTask(text, status = STATUS_ACTIVE, createDate, id) {
+    const newTask = {
+      status,
+      description: text,
+      crDate: createDate ? new Date(createDate) : new Date(),
+      id: id || this.createNewTaskId(),
+    };
+
+    return newTask;
+  }
+
+  createNewTaskId() {
+    const { todoData } = this.state;
+
+    if (Object.keys(todoData).length !== 0) {
+      const maxDataId = todoData.map((item) => item.id);
+      return Math.max(...maxDataId) + 1;
+    }
+
+    return 1;
+  }
 
   render() {
     const { todoData, filter } = this.state;
@@ -121,7 +134,7 @@ export default class App extends Component {
 
     return (
       <section className="todoapp">
-        <Header createNewTask={this.createNewTask} />
+        <Header onAddTask={this.onAddTask} />
         <section className="main">
           <TaskList
             todoData={filteredTodoData}
@@ -132,7 +145,7 @@ export default class App extends Component {
           <Footer
             clearBtn={this.entriesComplete(todoData)}
             leftTaskCount={taskCount}
-            onClearCompleted={() => this.onClearCompleted(todoData)}
+            onClearCompleted={() => this.onClearCompleted()}
             onSort={this.onSort}
             filter={filter}
           />

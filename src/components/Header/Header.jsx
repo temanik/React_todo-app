@@ -9,7 +9,7 @@ export default class Header extends Component {
   };
 
   static propTypes = {
-    createNewTask: PropTypes.func.isRequired,
+    onAddTask: PropTypes.func.isRequired,
   };
 
   onLabelChange = (value) => {
@@ -30,7 +30,7 @@ export default class Header extends Component {
 
   render() {
     const { label } = this.state;
-    const { createNewTask } = this.props;
+    const { onAddTask } = this.props;
 
     return (
       <header className="header">
@@ -41,7 +41,7 @@ export default class Header extends Component {
           // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus
           onChange={(evt) => this.onLabelChange(evt.target.value)}
-          onKeyDown={(evt) => this.onLabelSubmit(evt.code, createNewTask)}
+          onKeyDown={(evt) => this.onLabelSubmit(evt.code, onAddTask)}
           value={label}
         />
       </header>

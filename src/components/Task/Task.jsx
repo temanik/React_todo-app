@@ -2,22 +2,20 @@ import React, { Component } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import PropTypes from 'prop-types';
 
+import { STATUS_COMPLETED, STATUS_EDITING } from '../../constants';
+
 import './Task.css';
 
 export default class Task extends Component {
-  static defaultProps = {
-    status: null,
-  };
-
   static propTypes = {
     onChangeTaskStatus: PropTypes.func.isRequired,
     onDeletedTask: PropTypes.func.isRequired,
-    status: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(null)]),
+    status: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     crDate: PropTypes.instanceOf(Date).isRequired,
   };
 
-  isStatusCompleted = (status) => status === 'completed';
+  isStatusCompleted = (status) => status === STATUS_COMPLETED;
 
   createAddTime = (crDate) => formatDistanceToNow(crDate.getTime(), { includeSeconds: true });
 
@@ -40,7 +38,7 @@ export default class Task extends Component {
           type="button"
           aria-label="edit icon"
           className="icon icon-edit"
-          onClick={() => onChangeTaskStatus(status, 'editing')}
+          onClick={() => onChangeTaskStatus(status, STATUS_EDITING)}
         />
         <button type="button" aria-label="delete icon" className="icon icon-destroy" onClick={onDeletedTask} />
       </div>
