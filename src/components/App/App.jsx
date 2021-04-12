@@ -21,16 +21,12 @@ export default class App extends Component {
     filter: STATUS_ALL,
   };
 
-  isStatusCompleted = (status) => status === STATUS_COMPLETED;
-
   getTaskIndex = (arr, id) => arr.findIndex((item) => item.id === id);
 
-  entriesComplete = (data) => data.some((item) => this.isStatusCompleted(item.status));
+  entriesComplete = (data) => data.some((item) => item.status === STATUS_COMPLETED);
 
-  getLeftTaskCount = (data) => {
-    const leftTask = data.filter((item) => this.isStatusCompleted(item.status));
-    return data.length - leftTask.length;
-  };
+  getLeftTaskCount = (data) =>
+    data.reduce((acc, val) => (val.status.includes(STATUS_COMPLETED) ? acc - 1 : acc), data.length);
 
   onClearCompleted = () => {
     this.setState(({ todoData }) => {
