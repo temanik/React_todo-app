@@ -23,7 +23,7 @@ export default class App extends Component {
 
   getTaskIndex = (arr, id) => arr.findIndex((item) => item.id === id);
 
-  entriesComplete = (data) => data.some((item) => item.status === STATUS_COMPLETED);
+  checkEntriesComplete = (data) => data.some((item) => item.status === STATUS_COMPLETED);
 
   getLeftTaskCount = (data) =>
     data.reduce((acc, val) => (val.status.includes(STATUS_COMPLETED) ? acc - 1 : acc), data.length);
@@ -139,7 +139,7 @@ export default class App extends Component {
             onDeletedTask={this.onDeletedTask}
           />
           <Footer
-            clearBtn={this.entriesComplete(todoData)}
+            clearBtn={this.checkEntriesComplete(todoData)}
             leftTaskCount={taskCount}
             onClearCompleted={() => this.onClearCompleted()}
             onSort={this.onSort}
