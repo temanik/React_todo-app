@@ -69,7 +69,6 @@
 .clear-completed,
 html .clear-completed:active {  
   margin-left: auto;
-  text-align: right;
   position: relative;
   line-height: 20px;
   text-decoration: none;
