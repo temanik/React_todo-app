@@ -1,3 +1,5 @@
+/* eslint-disable react/button-has-type */
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { Component } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import PropTypes from 'prop-types';
@@ -31,8 +33,13 @@ export default class Task extends Component {
           onChange={() => onChangeTaskStatus(status)}
         />
         <label>
-          <span className="description">{description}</span>
-          <span className="created">{this.createAddTime(crDate)}</span>
+          <span className="title">{description}</span>
+          <span className="description">
+            <button className="icon icon-play" />
+            <button className="icon icon-pause" />
+            12:25
+          </span>
+          <span className="description">{this.createAddTime(crDate)}</span>
         </label>
         <button
           type="button"
