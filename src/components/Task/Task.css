@@ -1,0 +1,21 @@
+.title {
+  width: 170px;
+}
+
+.timer {
+  margin-left: auto;
+  margin-right: 10px;
+  width: 100px;
+}
+
+.created-time {
+  width: 128px;
+  text-align: right;
+}
+
+.timer-time{
+  display: inline-block;
+  text-align: right;
+  width: 50px;
+  padding-left: 10px;
+}

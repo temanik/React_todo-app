@@ -3,26 +3,64 @@
 import React, { Component } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import PropTypes from 'prop-types';
+import TaskTimer from '../TaskTimer';
 
 import { STATUS_COMPLETED, STATUS_EDITING } from '../../constants';
 
 import './Task.css';
 
 export default class Task extends Component {
+  state = {};
+
   static propTypes = {
     onChangeTaskStatus: PropTypes.func.isRequired,
     onDeletedTask: PropTypes.func.isRequired,
     status: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     crDate: PropTypes.instanceOf(Date).isRequired,
+    onStartTaskTimer: PropTypes.func.isRequired,
+    onPauseTaskTimer: PropTypes.func.isRequired,
+    taskTime: PropTypes.number.isRequired,
   };
+
+  onStartTaskTimer = (start) => {
+    // eslint-disable-next-line react/destructuring-assignment
+    this.props.onStartTaskTimer();
+    start();
+  };
+
+  onPauseTaskTimer = (pause) => {
+    // eslint-disable-next-line react/destructuring-assignment
+    this.props.onPauseTaskTimer();
+    pause();
+  };
+
+  // getTaskTimer = (renderHours, renderMinutes) => {
+  //       if (renderHours) return <><Timer.Hours />:</>;
+  //       if (renderMinutes) return <><Timer.Minutes />:</>;
+
+  //       return false;
+  //   }
+
+  getTaskTimerElement = (time) => (
+    <TaskTimer initialTime={time} direction="backward" startImmediately={false}>
+      {({ start, pause }) => (
+        <>
+          <span>
+            <button className="icon icon-play" onClick={() => this.onStartTaskTimer(start)} />
+            <button className="icon icon-pause" onClick={() => this.onPauseTaskTimer(pause)} />
+          </span>
+        </>
+      )}
+    </TaskTimer>
+  );
 
   isStatusCompleted = (status) => status === STATUS_COMPLETED;
 
   createAddTime = (crDate) => formatDistanceToNow(crDate.getTime(), { includeSeconds: true });
 
   render() {
-    const { onChangeTaskStatus, onDeletedTask, status, description, crDate } = this.props;
+    const { onChangeTaskStatus, onDeletedTask, status, description, crDate, taskTime } = this.props;
 
     return (
       <div className="view">
@@ -34,12 +72,10 @@ export default class Task extends Component {
         />
         <label>
           <span className="title">{description}</span>
-          <span className="description">
-            <button className="icon icon-play" />
-            <button className="icon icon-pause" />
-            12:25
+          <span className="description timer">
+            <TaskTimer taskTime={taskTime} />
           </span>
-          <span className="description">{this.createAddTime(crDate)}</span>
+          <span className="description created-time">{this.createAddTime(crDate)}</span>
         </label>
         <button
           type="button"
