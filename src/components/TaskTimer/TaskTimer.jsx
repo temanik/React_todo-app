@@ -1,6 +1,5 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
-/* eslint-disable prefer-const */
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -30,7 +29,7 @@ export default class Task extends Component {
       const newTimerId = setInterval(() => {
         // eslint-disable-next-line no-shadow
         let { taskTime } = this.state;
-        console.log(taskTime);
+
         if (taskTime <= 0) return this.onPauseTaskTimer();
 
         taskTime -= 1;
