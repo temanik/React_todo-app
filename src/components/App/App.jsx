@@ -21,14 +21,6 @@ export default class App extends Component {
     filter: STATUS_ALL,
   };
 
-  onStartTaskTimer = () => {
-    console.log('start');
-  };
-
-  onPauseTaskTimer = () => {
-    console.log('pause');
-  };
-
   getTaskIndex = (arr, id) => arr.findIndex((item) => item.id === id);
 
   checkEntriesComplete = (data) => data.some((item) => item.status === STATUS_COMPLETED);

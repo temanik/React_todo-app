@@ -14,10 +14,7 @@ export default class Header extends Component {
     onAddTask: PropTypes.func.isRequired,
   };
 
-  timeConverter = (min, sec) => {
-    console.log(min * 60 + sec * 1000);
-    return (min * 60 + sec) * 1000;
-  };
+  timeConverter = (min, sec) => min * 60 + sec;
 
   inputValidator = (value, isOnlyNum) => !isOnlyNum || !Number.isNaN(+value);
 

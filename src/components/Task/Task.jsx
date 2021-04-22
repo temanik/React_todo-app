@@ -18,42 +18,8 @@ export default class Task extends Component {
     status: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     crDate: PropTypes.instanceOf(Date).isRequired,
-    onStartTaskTimer: PropTypes.func.isRequired,
-    onPauseTaskTimer: PropTypes.func.isRequired,
     taskTime: PropTypes.number.isRequired,
   };
-
-  onStartTaskTimer = (start) => {
-    // eslint-disable-next-line react/destructuring-assignment
-    this.props.onStartTaskTimer();
-    start();
-  };
-
-  onPauseTaskTimer = (pause) => {
-    // eslint-disable-next-line react/destructuring-assignment
-    this.props.onPauseTaskTimer();
-    pause();
-  };
-
-  // getTaskTimer = (renderHours, renderMinutes) => {
-  //       if (renderHours) return <><Timer.Hours />:</>;
-  //       if (renderMinutes) return <><Timer.Minutes />:</>;
-
-  //       return false;
-  //   }
-
-  getTaskTimerElement = (time) => (
-    <TaskTimer initialTime={time} direction="backward" startImmediately={false}>
-      {({ start, pause }) => (
-        <>
-          <span>
-            <button className="icon icon-play" onClick={() => this.onStartTaskTimer(start)} />
-            <button className="icon icon-pause" onClick={() => this.onPauseTaskTimer(pause)} />
-          </span>
-        </>
-      )}
-    </TaskTimer>
-  );
 
   isStatusCompleted = (status) => status === STATUS_COMPLETED;
 

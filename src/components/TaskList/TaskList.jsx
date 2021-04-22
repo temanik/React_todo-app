@@ -15,8 +15,6 @@ export default class TaskList extends Component {
     onDeletedTask: PropTypes.func.isRequired,
     onChangeTaskLabel: PropTypes.func.isRequired,
     onChangeTaskStatus: PropTypes.func.isRequired,
-    onStartTaskTimer: PropTypes.func.isRequired,
-    onPauseTaskTimer: PropTypes.func.isRequired,
   };
 
   statusToggle = (oldStatus, newStatus) => {
@@ -53,14 +51,7 @@ export default class TaskList extends Component {
   };
 
   render() {
-    const {
-      todoData,
-      onDeletedTask,
-      onChangeTaskLabel,
-      onChangeTaskStatus,
-      onStartTaskTimer,
-      onPauseTaskTimer,
-    } = this.props;
+    const { todoData, onDeletedTask, onChangeTaskLabel, onChangeTaskStatus } = this.props;
 
     const taskArray = todoData.map((task) => {
       const { id, status, description } = task;
@@ -69,8 +60,6 @@ export default class TaskList extends Component {
         <li key={id} className={status}>
           <Task
             {...task}
-            onStartTaskTimer={onStartTaskTimer}
-            onPauseTaskTimer={onPauseTaskTimer}
             onChangeTaskStatus={this.onChangeTaskStatus(id, onChangeTaskStatus)}
             onDeletedTask={() => onDeletedTask(id)}
           />
