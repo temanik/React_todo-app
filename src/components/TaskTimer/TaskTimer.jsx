@@ -18,6 +18,11 @@ export default class Task extends Component {
     taskTime: PropTypes.number.isRequired,
   };
 
+  componentWillUnmount = () => {
+    const { timerId } = this.state;
+    clearInterval(timerId);
+  };
+
   onStartTaskTimer = () => {
     const { timerId, taskTime } = this.state;
 
@@ -25,7 +30,7 @@ export default class Task extends Component {
       const newTimerId = setInterval(() => {
         // eslint-disable-next-line no-shadow
         let { taskTime } = this.state;
-
+        console.log(taskTime);
         if (taskTime <= 0) return this.onPauseTaskTimer();
 
         taskTime -= 1;
