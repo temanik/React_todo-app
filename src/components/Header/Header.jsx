@@ -6,22 +6,33 @@ import './Header.css';
 export default class Header extends Component {
   state = {
     label: '',
+    min: '',
+    sec: '',
   };
 
   static propTypes = {
     onAddTask: PropTypes.func.isRequired,
   };
 
-  onLabelChange = (value) => {
-    this.setState({ label: value });
+  timeConverter = (min, sec) => min * 60 + sec;
+
+  inputValidator = (value, isOnlyNum) => !isOnlyNum || !Number.isNaN(+value);
+
+  onInputChange = (inputName, value, isOnlyNum = false) => {
+    if (this.inputValidator(value, isOnlyNum)) return this.setState({ [inputName]: value });
+    return false;
   };
 
-  onLabelSubmit = (eCode, fn) => {
-    this.setState(({ label }) => {
+  onInputSubmit = (eCode, fn) => {
+    this.setState(({ label, min, sec }) => {
       if (eCode === 'Enter' || eCode === 'NumpadEnter') {
-        if (label !== '') fn(label);
+        if (label !== '') fn(label, this.timeConverter(+min, +sec));
 
-        return { label: '' };
+        return {
+          label: '',
+          min: '',
+          sec: '',
+        };
       }
 
       return false;
@@ -29,21 +40,37 @@ export default class Header extends Component {
   };
 
   render() {
-    const { label } = this.state;
+    const { label, min, sec } = this.state;
     const { onAddTask } = this.props;
 
     return (
       <header className="header">
         <h1>todos</h1>
-        <input
-          className="new-todo"
-          placeholder="What needs to be done?"
-          // eslint-disable-next-line jsx-a11y/no-autofocus
-          autoFocus
-          onChange={(evt) => this.onLabelChange(evt.target.value)}
-          onKeyDown={(evt) => this.onLabelSubmit(evt.code, onAddTask)}
-          value={label}
-        />
+        <form className="new-todo-form">
+          <input
+            className="new-todo"
+            placeholder="Task"
+            // eslint-disable-next-line jsx-a11y/no-autofocus
+            autoFocus
+            onChange={(evt) => this.onInputChange('label', evt.target.value)}
+            onKeyDown={(evt) => this.onInputSubmit(evt.code, onAddTask)}
+            value={label}
+          />
+          <input
+            className="new-todo-form__timer"
+            placeholder="Min"
+            onChange={(evt) => this.onInputChange('min', evt.target.value, true)}
+            onKeyDown={(evt) => this.onInputSubmit(evt.code, onAddTask)}
+            value={min}
+          />
+          <input
+            className="new-todo-form__timer"
+            placeholder="Sec"
+            onChange={(evt) => this.onInputChange('sec', evt.target.value, true)}
+            onKeyDown={(evt) => this.onInputSubmit(evt.code, onAddTask)}
+            value={sec}
+          />
+        </form>
       </header>
     );
   }

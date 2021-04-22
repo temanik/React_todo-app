@@ -11,11 +11,11 @@ import './App.css';
 export default class App extends Component {
   state = {
     todoData: [
-      this.createNewTask('Active task', STATUS_ACTIVE, 1618993504397, 1),
-      this.createNewTask('Active task', STATUS_ACTIVE, 1616933004397, 10),
-      this.createNewTask('Completed task', STATUS_COMPLETED, new Date(new Date() - 94397), 13),
-      this.createNewTask('Completed task', STATUS_COMPLETED, null, 11),
-      this.createNewTask('Active task', STATUS_ACTIVE, null, 18),
+      this.createNewTask('Active task', 1, STATUS_ACTIVE, 1618993504397, 1),
+      this.createNewTask('Active task', 550, STATUS_ACTIVE, 1616933004397, 10),
+      this.createNewTask('Completed task', 60 * 60, STATUS_COMPLETED, new Date(new Date() - 94397), 13),
+      this.createNewTask('Completed task', 5500, STATUS_COMPLETED, null, 11),
+      this.createNewTask('Active task', 55, STATUS_ACTIVE, null, 18),
     ],
 
     filter: STATUS_ALL,
@@ -39,11 +39,12 @@ export default class App extends Component {
     this.setState({ filter });
   };
 
-  onChangeTaskLabel = (id, newLabel) => {
+  onChangeTaskLabel = (id, newLabel, taskTime) => {
     this.setState(({ todoData }) => {
       const idx = this.getTaskIndex(todoData, id);
       const newTask = { ...todoData[idx] };
       newTask.description = newLabel;
+      newTask.taskTime = taskTime;
       newTask.status = newTask.status === `${STATUS_ACTIVE} ${STATUS_EDITING}` ? STATUS_ACTIVE : STATUS_COMPLETED;
       const newData = [...todoData.slice(0, idx), newTask, ...todoData.slice(idx + 1)];
 
@@ -62,8 +63,8 @@ export default class App extends Component {
     });
   };
 
-  onAddTask = (label) => {
-    const task = this.createNewTask(label);
+  onAddTask = (label, taskTime) => {
+    const task = this.createNewTask(label, taskTime);
 
     this.setState(({ todoData }) => {
       const newData = [task, ...todoData];
@@ -101,12 +102,13 @@ export default class App extends Component {
       }
     });
 
-  createNewTask(text, status = STATUS_ACTIVE, createDate, id) {
+  createNewTask(text, taskTime = 10 * 60 * 1000, status = STATUS_ACTIVE, createDate, id) {
     const newTask = {
       status,
       description: text,
       crDate: createDate ? new Date(createDate) : new Date(),
       id: id || this.createNewTaskId(),
+      taskTime,
     };
 
     return newTask;
@@ -134,6 +136,8 @@ export default class App extends Component {
         <section className="main">
           <TaskList
             todoData={filteredTodoData}
+            onStartTaskTimer={this.onStartTaskTimer}
+            onPauseTaskTimer={this.onPauseTaskTimer}
             onChangeTaskLabel={this.onChangeTaskLabel}
             onChangeTaskStatus={this.onChangeTaskStatus}
             onDeletedTask={this.onDeletedTask}
